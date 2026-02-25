@@ -1,0 +1,55 @@
+{
+  "jobs": {
+    "Job1": {
+      "due_date": 100,
+      "operations": [
+        {"machine": 1, "time": 8, "next": 2},
+        {"machine": 3, "time": 12, "next": 3},
+        {"machine": 2, "time": 10, "next": 4},
+        {"machine": 4, "time": 7, "next": 5},
+        {"machine": 5, "time": 9, "next": null}
+      ]
+    },
+    "Job2": {
+      "due_date": 120,
+      "operations": [
+        {"machine": 1, "time": 6, "next": 2},
+        {"machine": 2, "time": 14, "next": 3},
+        {"machine": 4, "time": 9, "next": 4},
+        {"machine": 5, "time": 11, "next": 5},
+        {"machine": 3, "time": 8, "next": null}
+      ]
+    },
+    "Job3": {
+      "due_date": 90,
+      "operations": [
+        {"machine": 1, "time": 10, "next": 2},
+        {"machine": 4, "time": 8, "next": 3},
+        {"machine": 5, "time": 12, "next": 4},
+        {"machine": 3, "time": 9, "next": 5},
+        {"machine": 2, "time": 7, "next": null}
+      ]
+    },
+    "Job4": {
+      "due_date": 110,
+      "operations": [
+        {"machine": 1, "time": 7, "next": 2},
+        {"machine": 5, "time": 13, "next": 3},
+        {"machine": 3, "time": 8, "next": 4},
+        {"machine": 2, "time": 10, "next": 5},
+        {"machine": 4, "time": 12, "next": null}
+      ]
+    },
+    "Job5": {
+      "due_date": 130,
+      "operations": [
+        {"machine": 1, "time": 9, "next": 2},
+        {"machine": 3, "time": 11, "next": 3},
+        {"machine": 4, "time": 10, "next": 4},
+        {"machine": 5, "time": 8, "next": 5},
+        {"machine": 2, "time": 13, "next": null}
+      ]
+    }
+  },
+  "machines": [1, 2, 3, 4, 5]
+}
