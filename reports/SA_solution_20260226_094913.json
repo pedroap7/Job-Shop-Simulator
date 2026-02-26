@@ -1,0 +1,48 @@
+{
+  "solution": {
+    "Job1_1": 25,
+    "Job1_2": 25,
+    "Job1_3": 25,
+    "Job1_4": 25,
+    "Job1_5": 25,
+    "Job2_1": 25,
+    "Job2_2": 25,
+    "Job2_3": 25,
+    "Job2_4": 25,
+    "Job2_5": 25,
+    "Job3_1": 25,
+    "Job3_2": 25,
+    "Job3_3": 25,
+    "Job3_4": 25,
+    "Job3_5": 25,
+    "Job4_1": 25,
+    "Job4_2": 25,
+    "Job4_3": 25,
+    "Job4_4": 25,
+    "Job4_5": 25,
+    "Job5_1": 24,
+    "Job5_2": 25,
+    "Job5_3": 25,
+    "Job5_4": 25,
+    "Job5_5": 25
+  },
+  "makespan": 87,
+  "tardiness": 0,
+  "cost": 87.0,
+  "iterations": 436,
+  "job_completion_times": {
+    "Job1": 75,
+    "Job2": 62,
+    "Job3": 82,
+    "Job4": 87,
+    "Job5": 65
+  },
+  "params": {
+    "temp": 10000.0,
+    "cooling": 0.98,
+    "max_iter": 10000,
+    "w_makespan": 1.0,
+    "w_tardiness": 0.0
+  },
+  "timestamp": "20260226_094913"
+}

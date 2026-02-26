@@ -1,0 +1,13 @@
+{
+  "rule": "PADRAO",
+  "makespan": 90,
+  "tardiness": 0,
+  "job_completion_times": {
+    "Job1": 69,
+    "Job2": 60,
+    "Job3": 76,
+    "Job4": 77,
+    "Job5": 90
+  },
+  "timestamp": "20260226_095124"
+}
