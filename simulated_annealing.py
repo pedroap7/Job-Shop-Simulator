@@ -1,6 +1,7 @@
 import random
 import math
 from copy import deepcopy
+from utils import plot_sa_evolution
 
 class SimulatedAnnealing:
     def __init__(self, instance, initial_temp=1000, cooling_rate=0.95, 
@@ -109,7 +110,7 @@ class SimulatedAnnealing:
         print(f"  Baixa prioridade (≥40): {low_priority}")
     
     def run(self, initial_solution=None, verbose=True, weight_makespan=0.5, 
-            weight_tardiness=0.5, multi_changes=False):
+            weight_tardiness=0.5, multi_changes=False, plot_evolution=True):
         """
         Executa o algoritmo Simulated Annealing
         
@@ -119,6 +120,7 @@ class SimulatedAnnealing:
             weight_makespan: peso do makespan na função objetivo
             weight_tardiness: peso do tardiness na função objetivo
             multi_changes: se True, usa vizinhança com múltiplas mudanças
+            plot_evolution: se True, gera gráfico de evolução
         """
         print("\n" + "="*70)
         print("🔍 INICIANDO SIMULATED ANNEALING")
@@ -154,8 +156,13 @@ class SimulatedAnnealing:
         iteration = 0
         iterations_without_improvement = 0
         
-        history = []
-        best_history = []
+        history = [current_cost]  # Histórico de custos atuais
+        best_history = [best_cost]  # Histórico de melhores custos
+        temp_history = [temperature]  # Histórico de temperaturas
+        
+        acceptance_rate = 0
+        accepted = 0
+        total_moves = 0
         
         while temperature > self.min_temp and iteration < self.max_iterations:
             # Gera solução vizinha
@@ -169,11 +176,13 @@ class SimulatedAnnealing:
             
             # Calcula delta
             delta = neighbor_cost - current_cost
+            total_moves += 1
             
             # Aceita solução se for melhor ou com probabilidade de Metropolis
             if delta < 0 or random.random() < math.exp(-delta / temperature):
                 current_solution = neighbor
                 current_cost = neighbor_cost
+                accepted += 1
                 
                 # Atualiza melhor solução
                 if current_cost < best_cost:
@@ -187,13 +196,20 @@ class SimulatedAnnealing:
             else:
                 iterations_without_improvement += 1
             
+            # Registra histórico
+            history.append(current_cost)
+            best_history.append(best_cost)
+            temp_history.append(temperature)
+            
             # Resfriamento
             temperature *= self.cooling_rate
             iteration += 1
             
-            # Registra histórico
-            history.append(current_cost)
-            best_history.append(best_cost)
+            # Calcula taxa de aceitação a cada 100 iterações
+            if iteration % 100 == 0:
+                acceptance_rate = (accepted / total_moves) * 100
+                accepted = 0
+                total_moves = 0
             
             # Adaptive cooling - se não há melhora, acelera resfriamento
             if iterations_without_improvement > 100:
@@ -206,7 +222,7 @@ class SimulatedAnnealing:
                 print(f"  Temp: {temperature:.2f}")
                 print(f"  Custo atual: {current_cost:.2f}")
                 print(f"  Melhor custo: {best_cost:.2f}")
-                self.print_solution_stats(current_solution, "Atual")
+                print(f"  Taxa aceitação: {acceptance_rate:.1f}%")
         
         print("\n" + "="*70)
         print("🏁 SIMULATED ANNEALING CONCLUÍDO!")
@@ -214,9 +230,15 @@ class SimulatedAnnealing:
         print(f"Iterações realizadas: {iteration}")
         print(f"Temperatura final: {temperature:.2f}")
         print(f"Melhor custo encontrado: {best_cost:.2f}")
+        print(f"Melhoria: {(history[0] - best_cost)/history[0]*100:.1f}%")
         
         # Mostra estatísticas da melhor solução
         self.print_solution_stats(best_solution, "Melhor solução")
+        
+        # Gera gráfico de evolução
+        if plot_evolution:
+            print("\n📈 Gerando gráfico de evolução...")
+            plot_sa_evolution(history, best_history, f"sa_evolution_{iteration}")
         
         # Avalia melhor solução para obter resultados detalhados
         print("\n⏳ Avaliando melhor solução...")
@@ -232,10 +254,13 @@ class SimulatedAnnealing:
             'job_completion_times': final_results['job_completion_times'],
             'iterations': iteration,
             'history': history,
-            'best_history': best_history
+            'best_history': best_history,
+            'temp_history': temp_history,
+            'initial_cost': history[0],
+            'improvement': (history[0] - best_cost) / history[0] * 100
         }
     
-    def run_adaptive(self, initial_solution=None, verbose=True, time_limit=60):
+    def run_adaptive(self, initial_solution=None, verbose=True, time_limit=60, plot_evolution=True):
         """
         Versão adaptativa que ajusta os pesos durante a execução
         """
@@ -262,6 +287,11 @@ class SimulatedAnnealing:
         temperature = self.initial_temp
         iteration = 0
         
+        history = [current_cost]
+        best_history = [best_cost]
+        temp_history = [temperature]
+        weight_history = [(weight_makespan, weight_tardiness)]
+        
         while time.time() - start_time < time_limit and temperature > self.min_temp:
             # Ajusta pesos dinamicamente baseado no progresso
             if iteration % 100 == 0:
@@ -269,11 +299,13 @@ class SimulatedAnnealing:
                 if iteration % 200 == 0:
                     weight_makespan = 0.7
                     weight_tardiness = 0.3
-                    print("\n🔄 Focando em makespan...")
+                    if verbose:
+                        print("\n🔄 Focando em makespan...")
                 else:
                     weight_makespan = 0.3
                     weight_tardiness = 0.7
-                    print("\n🔄 Focando em tardiness...")
+                    if verbose:
+                        print("\n🔄 Focando em tardiness...")
             
             neighbor = self.get_neighbor_multi(current_solution, num_changes=2)
             neighbor_cost = self.evaluate_solution(neighbor, weight_makespan, weight_tardiness)
@@ -291,15 +323,29 @@ class SimulatedAnnealing:
             temperature *= self.cooling_rate
             iteration += 1
             
+            history.append(current_cost)
+            best_history.append(best_cost)
+            temp_history.append(temperature)
+            weight_history.append((weight_makespan, weight_tardiness))
+            
             if verbose and iteration % 50 == 0:
                 elapsed = time.time() - start_time
                 print(f"\n📊 Iteração {iteration} (tempo: {elapsed:.1f}s):")
                 print(f"  Temp: {temperature:.2f}")
                 print(f"  Melhor custo: {best_cost:.2f}")
+                print(f"  Pesos: M={weight_makespan:.1f} T={weight_tardiness:.1f}")
         
         print("\n" + "="*70)
         print("🏁 SA ADAPTATIVO CONCLUÍDO!")
         print("="*70)
+        print(f"Iterações: {iteration}")
+        print(f"Tempo total: {time.time() - start_time:.1f}s")
+        print(f"Melhor custo: {best_cost:.2f}")
+        
+        # Gera gráfico de evolução
+        if plot_evolution:
+            print("\n📈 Gerando gráfico de evolução...")
+            plot_sa_evolution(history, best_history, f"sa_adaptive_evolution_{iteration}")
         
         scheduler = self.create_scheduler()
         final_results = scheduler.simulate_with_user_priority(best_solution)
@@ -310,5 +356,9 @@ class SimulatedAnnealing:
             'makespan': final_results['makespan'],
             'tardiness': final_results['tardiness'],
             'schedule': final_results['schedule'],
-            'iterations': iteration
+            'iterations': iteration,
+            'history': history,
+            'best_history': best_history,
+            'temp_history': temp_history,
+            'weight_history': weight_history
         }

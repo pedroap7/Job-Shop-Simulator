@@ -1,7 +1,7 @@
 import os
 import json
 from datetime import datetime
-from utils import load_instance, plot_gantt, save_solution, create_reports_dir
+from utils import load_instance, plot_gantt, save_solution, create_reports_dir, plot_sa_evolution
 from scheduler import JobShopScheduler
 from simulated_annealing import SimulatedAnnealing
 
@@ -11,6 +11,7 @@ class JobShopSimulator:
         self.scheduler = JobShopScheduler(self.instance)
         self.user_decisions = []
         self.best_solution = None
+        self.sa_history = []  # Histórico de execuções do SA para comparação
         
     def run_interactive_mode(self):
         """Modo interativo para testar prioridades"""
@@ -33,11 +34,12 @@ class JobShopSimulator:
             print("1️⃣  Simular com critérios padrão")
             print("2️⃣  Definir prioridades manualmente")
             print("3️⃣  Executar Simulated Annealing")
-            print("4️⃣  Ver relatório comparativo")
-            print("5️⃣  Salvar última simulação")
-            print("6️⃣  Sair")
+            print("4️⃣  Comparar múltiplas execuções do SA")
+            print("5️⃣  Ver relatório comparativo")
+            print("6️⃣  Salvar última simulação")
+            print("7️⃣  Sair")
             
-            choice = input("\n👉 Escolha uma opção (1-6): ").strip()
+            choice = input("\n👉 Escolha uma opção (1-7): ").strip()
             
             if choice == '1':
                 self.run_standard_simulation()
@@ -49,18 +51,21 @@ class JobShopSimulator:
                 self.run_simulated_annealing()
                 
             elif choice == '4':
+                self.compare_sa_executions()
+                
+            elif choice == '5':
                 if self.user_decisions:
                     self.display_comparative_report()
                 else:
                     print("❌ Nenhuma simulação realizada ainda!")
                     
-            elif choice == '5':
+            elif choice == '6':
                 if self.user_decisions:
                     self.save_last_simulation()
                 else:
                     print("❌ Nenhuma simulação para salvar!")
                     
-            elif choice == '6':
+            elif choice == '7':
                 print("\n👋 Encerrando simulador...")
                 break
     
@@ -173,7 +178,7 @@ class JobShopSimulator:
             initial_solution = self.best_solution
             print("✅ Usando melhor solução encontrada anteriormente")
         elif choice == '3':
-            self.load_solution_from_file()
+            initial_solution = self.load_solution_from_file()
         
         # Pergunta parâmetros do SA
         print("\n⚙️ Configuração do SA:")
@@ -208,6 +213,15 @@ class JobShopSimulator:
         print("  2. Adaptativo (baseado em tempo)")
         mode = input("  Escolha (1-2) [1]: ").strip() or "1"
         
+        # Pergunta se quer gerar gráfico de evolução
+        print("\n📈 Opções de visualização:")
+        plot_evo_input = input("  Gerar gráfico de evolução do SA? (S/n): ").strip().lower()
+        plot_evolution = plot_evo_input != 'n'
+        
+        # Pergunta se quer salvar histórico para comparação
+        save_history_input = input("  Salvar histórico para comparações futuras? (s/N): ").strip().lower()
+        save_history = save_history_input == 's'
+        
         # Cria instância do SA
         sa = SimulatedAnnealing(
             self.instance, 
@@ -217,13 +231,16 @@ class JobShopSimulator:
         )
         
         # Executa
+        start_time = datetime.now()
+        
         if mode == '2':
             time_limit_input = input("  Limite de tempo (segundos) [60]: ").strip()
             time_limit = float(time_limit_input) if time_limit_input else 60
             results = sa.run_adaptive(
                 initial_solution=initial_solution,
                 time_limit=time_limit,
-                verbose=True
+                verbose=True,
+                plot_evolution=plot_evolution
             )
         else:
             results = sa.run(
@@ -231,8 +248,24 @@ class JobShopSimulator:
                 weight_makespan=w_makespan,
                 weight_tardiness=w_tardiness,
                 multi_changes=multi_changes,
-                verbose=True
+                verbose=True,
+                plot_evolution=plot_evolution
             )
+        
+        end_time = datetime.now()
+        execution_time = (end_time - start_time).total_seconds()
+        
+        # Adiciona informações de tempo aos resultados
+        results['execution_time'] = execution_time
+        results['params'] = {
+            'temp': temp,
+            'cooling': cooling,
+            'max_iter': max_iter,
+            'w_makespan': w_makespan,
+            'w_tardiness': w_tardiness,
+            'multi_changes': multi_changes,
+            'mode': 'adaptativo' if mode == '2' else 'padrão'
+        }
         
         # Mostra resultados
         print("\n" + "="*70)
@@ -242,6 +275,8 @@ class JobShopSimulator:
         print(f"  Atraso Total: {results['tardiness']:.1f}")
         print(f"  Custo: {results['cost']:.2f}")
         print(f"  Iterações: {results['iterations']}")
+        print(f"  Tempo de execução: {execution_time:.2f}s")
+        print(f"  Melhoria: {results.get('improvement', 0):.1f}%")
         
         # Mostra tempos de conclusão
         print("\n📅 Tempos de conclusão por Job:")
@@ -254,11 +289,65 @@ class JobShopSimulator:
         # Pergunta se quer salvar
         save = input("\n💾 Salvar esta solução? (s/N): ").strip().lower()
         if save == 's':
-            self.save_sa_solution(results, temp, cooling, max_iter, w_makespan, w_tardiness)
+            self.save_sa_solution(results)
+        
+        # Salva histórico para comparação se solicitado
+        if save_history:
+            self.sa_history.append({
+                'name': f"SA_{len(self.sa_history) + 1}",
+                'best_history': results['best_history'],
+                'makespan': results['makespan'],
+                'tardiness': results['tardiness'],
+                'cost': results['cost'],
+                'params': results['params']
+            })
         
         # Atualiza melhor solução
         self.best_solution = results['solution']
         self.user_decisions.append(("SA", results))
+    
+    def compare_sa_executions(self):
+        """Compara múltiplas execuções do SA"""
+        if len(self.sa_history) < 2:
+            print("\n❌ É necessário ter pelo menos 2 execuções do SA para comparação!")
+            print("   Execute o SA algumas vezes e salve os históricos.")
+            return
+        
+        print("\n" + "="*70)
+        print("📊 COMPARAÇÃO DE MÚLTIPLAS EXECUÇÕES DO SA")
+        print("="*70)
+        
+        # Prepara dados para o gráfico
+        from utils import plot_comparative_evolution
+        
+        labels = [f"{h['name']} (M:{h['makespan']:.0f} T:{h['tardiness']:.0f})" 
+                 for h in self.sa_history]
+        
+        # Gera gráfico comparativo
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        plot_comparative_evolution(self.sa_history, labels, f"sa_comparison_{timestamp}")
+        
+        # Mostra tabela comparativa
+        print("\n📋 Tabela comparativa:")
+        print("-" * 80)
+        print(f"{'Execução':<15} {'Makespan':<12} {'Atraso':<12} {'Custo':<12} {'Iterações':<12}")
+        print("-" * 80)
+        
+        for h in self.sa_history:
+            print(f"{h['name']:<15} {h['makespan']:<12.1f} {h['tardiness']:<12.1f} "
+                  f"{h['cost']:<12.2f} {len(h['best_history']):<12}")
+        
+        print("-" * 80)
+        
+        # Identifica melhor execução
+        best_cost = min(self.sa_history, key=lambda x: x['cost'])
+        best_makespan = min(self.sa_history, key=lambda x: x['makespan'])
+        best_tardiness = min(self.sa_history, key=lambda x: x['tardiness'])
+        
+        print("\n🏆 Melhores resultados:")
+        print(f"  Melhor custo: {best_cost['name']} - {best_cost['cost']:.2f}")
+        print(f"  Melhor makespan: {best_makespan['name']} - {best_makespan['makespan']:.1f}")
+        print(f"  Melhor tardiness: {best_tardiness['name']} - {best_tardiness['tardiness']:.1f}")
     
     def load_solution_from_file(self):
         """Carrega solução de um arquivo"""
@@ -314,7 +403,7 @@ class JobShopSimulator:
         
         return None
     
-    def save_sa_solution(self, results, temp, cooling, max_iter, w_makespan, w_tardiness):
+    def save_sa_solution(self, results):
         """Salva solução do SA em arquivo"""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
@@ -327,29 +416,39 @@ class JobShopSimulator:
             'tardiness': results['tardiness'],
             'cost': results['cost'],
             'iterations': results['iterations'],
+            'execution_time': results.get('execution_time', 0),
+            'improvement': results.get('improvement', 0),
             'job_completion_times': results['job_completion_times'],
-            'params': {
-                'temp': temp,
-                'cooling': cooling,
-                'max_iter': max_iter,
-                'w_makespan': w_makespan,
-                'w_tardiness': w_tardiness
-            },
+            'params': results.get('params', {}),
             'timestamp': timestamp
         }
+        
+        # Salva históricos se existirem
+        if 'history' in results:
+            save_data['history'] = results['history']
+        if 'best_history' in results:
+            save_data['best_history'] = results['best_history']
         
         filename = f"SA_solution_{timestamp}"
         with open(f'reports/{filename}.json', 'w', encoding='utf-8') as f:
             json.dump(save_data, f, indent=2)
         print(f"✅ Solução salva em reports/{filename}.json")
         
-        # Gera gráfico
+        # Gera gráfico de Gantt
         plot_gantt(
             results['schedule'], 
             results['makespan'], 
             results['tardiness'], 
             filename
         )
+        
+        # Gera gráfico de evolução separado se tiver histórico
+        if 'history' in results and 'best_history' in results:
+            plot_sa_evolution(
+                results['history'], 
+                results['best_history'], 
+                f"{filename}_evolution"
+            )
     
     def save_simulation(self, results, rule_name):
         """Salva resultados da simulação"""
@@ -462,7 +561,7 @@ class JobShopSimulator:
             if results['tardiness'] == best_tardiness:
                 tardiness_str += " 🏆"
             
-            print(f"{rule:<15} {makespan_str:<15} {tardiness_str:<15} {jobs_ok}/5 {eficiencia:<11.1f}%")
+            print(f"{rule:<15} {makespan_str:<15} {tardiness_str:<15} {jobs_ok:<2}/5{'':<6} {eficiencia:<11.1f}%")
         
         # Análise detalhada
         print("\n" + "="*80)
@@ -576,6 +675,7 @@ def main():
     print("  • Simulação com regras de prioridade fixas")
     print("  • Definição manual de prioridades")
     print("  • Otimização via Simulated Annealing")
+    print("  • Comparação de múltiplas execuções do SA")
     
     # Inicia simulador
     simulator = JobShopSimulator(instance_file)
