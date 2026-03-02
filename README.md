@@ -2,7 +2,7 @@
 
 > Simulador de eventos discretos para o clássico problema de *Job Shop*.
 
-Este projeto oferece uma plataforma para modelar, simular e otimizar sequenciamento de operações em máquinas distintas, considerando restrições típicas do problema **Job Shop Scheduling**. Além da simulação, o sistema incorpora metaheurísticas para buscar soluções de alta qualidade.
+> Este projeto oferece uma plataforma para modelar, simular e otimizar sequenciamento de operações em máquinas distintas, considerando restrições típicas do problema **Job Shop Scheduling**. Além da simulação, o sistema incorpora metaheurísticas para buscar soluções de alta qualidade.
 
 ---
 
@@ -50,10 +50,5 @@ reports/          # (vazio) espaço para relatórios gerados
 
 ---
 
-## 🧠 Como contribuir
-
-1. Crie um fork do projeto.
-2. Abra uma issue descrevendo sua ideia ou correção.
-3. Envie um pull request com código teste e documentação.
-
----
+### 🖥️ Linguagens
+<img align="center" alt="Python" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
