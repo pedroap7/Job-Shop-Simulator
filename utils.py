@@ -12,6 +12,7 @@ def load_instance(filepath):
 
 def save_solution(solution, filename):
     """Salva uma solução em arquivo JSON"""
+    os.makedirs('reports', exist_ok=True)
     with open(f'reports/{filename}.json', 'w', encoding='utf-8') as f:
         json.dump(solution, f, indent=2)
 
@@ -57,6 +58,7 @@ def plot_gantt(schedule, makespan, tardiness, filename=None):
     plt.tight_layout()
     
     if filename:
+        os.makedirs('reports', exist_ok=True)
         plt.savefig(f'reports/{filename}.png', dpi=100, bbox_inches='tight')
     plt.show()
 
@@ -112,6 +114,7 @@ def plot_sa_evolution(history, best_history, filename=None):
             bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
     
     if filename:
+        os.makedirs('reports', exist_ok=True)
         plt.savefig(f'reports/{filename}_evolution.png', dpi=100, bbox_inches='tight')
     
     plt.show()
@@ -145,6 +148,7 @@ def plot_comparative_evolution(sa_results_list, labels=None, filename=None):
     plt.tight_layout()
     
     if filename:
+        os.makedirs('reports', exist_ok=True)
         plt.savefig(f'reports/{filename}_comparison.png', dpi=100, bbox_inches='tight')
     
     plt.show()
