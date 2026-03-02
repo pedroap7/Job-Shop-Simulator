@@ -47,7 +47,7 @@ reports/          # (vazio) espaço para relatórios gerados
    - Ajuste parâmetros diretamente nos módulos ou via interface gráfica.
 4. **Visualizar resultados**
    - Use a interface gráfica para ver gráficos de evolução, cronogramas e comparar soluções.
-
+5. Consulte [USAGE.md](https://github.com/pedroap7/Job-Shop-Simulator/edit/UI_test/USAGE.md) para mais informações
 ---
 
 ### 🖥️ Linguagens
