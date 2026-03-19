@@ -21,7 +21,11 @@ def plot_gantt(schedule, makespan, tardiness, filename=None):
     fig, ax = plt.subplots(figsize=(15, 8))
     
     # Cores para diferentes jobs
-    colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7']
+    colors = ['#FF6B6B', '#4ECDC4', "#1C0CF3", '#96CEB4', '#FFEAA7', 
+                "#EF0F0F", "#D602FB", "#FF9900", "#065A6C", "#0AFD8B", 
+                "#F6FB01", "#FF05DE", "#11863C", "#710350", "#A9CE3B",
+                "#01FF09", "#5C5153", "#B48B73", "#00FBFF", "#222D8E"]
+            
     
     # Para cada job
     for job_idx, (job_name, job_ops) in enumerate(schedule.items()):

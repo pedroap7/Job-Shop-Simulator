@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
+from ttkthemes import ThemedTk
 import json
 import os
 from datetime import datetime
@@ -34,6 +35,9 @@ class MainWindow:
         # Cria interface
         self.create_menu()
         self.create_main_layout()
+        
+        # Inicializa o painel de informações com os dados atuais
+        self.update_info_panel()
         
     def ensure_instance_file(self):
         """Garante que o arquivo de instância existe"""
@@ -79,7 +83,7 @@ class MainWindow:
         style = ttk.Style()
         style.theme_use('clam')
         
-        self.bg_color = '#f0f0f0'
+        self.bg_color = "#f0f0f0"
         self.primary_color = '#2c3e50'
         self.secondary_color = '#3498db'
         
@@ -141,19 +145,28 @@ class MainWindow:
         
     def create_info_panel(self, parent):
         """Painel de informações do problema"""
-        frame = ttk.LabelFrame(parent, text="Informações do Problema", padding=10)
-        frame.pack(fill=tk.X, pady=5)
+        self.info_frame = ttk.LabelFrame(parent, text="Informações do Problema", padding=10)
+        self.info_frame.pack(fill=tk.X, pady=5)
         
+        # Label que será atualizado
+        self.info_label = ttk.Label(self.info_frame, text="", justify=tk.LEFT)
+        self.info_label.pack()
+        
+        ttk.Button(self.info_frame, text="Ver Detalhes", 
+                  command=self.show_instance_details).pack(pady=5)
+    
+    def update_info_panel(self):
+        """Atualiza o painel de informações com os dados da instância atual"""
         num_jobs = len(self.instance['jobs'])
         num_machines = len(self.instance['machines'])
         num_operations = sum(len(job['operations']) for job in self.instance['jobs'].values())
         
         info_text = f"Jobs: {num_jobs}\nMáquinas: {num_machines}\nOperações: {num_operations}"
-        label = ttk.Label(frame, text=info_text, justify=tk.LEFT)
-        label.pack()
+        self.info_label.config(text=info_text)
         
-        ttk.Button(frame, text="Ver Detalhes", 
-                  command=self.show_instance_details).pack(pady=5)
+        # Atualiza também o título da janela para refletir a instância atual
+        instance_name = os.path.basename(self.instance_file)
+        self.root.title(f"Job Shop Simulator - {instance_name}")
         
     def create_results_panel(self, parent):
         """Painel de resultados"""
@@ -219,6 +232,11 @@ class MainWindow:
                 self.instance = load_instance(filename)
                 self.problem = JobShopProblem(instance_data=self.instance)
                 self.scheduler = JobShopScheduler(self.instance)
+                self.instance_file = filename
+                
+                # ATUALIZA O PAINEL DE INFORMAÇÕES
+                self.update_info_panel()
+                
                 messagebox.showinfo("Sucesso", "Instância carregada com sucesso!")
             except Exception as e:
                 messagebox.showerror("Erro", f"Erro ao carregar instância: {e}")

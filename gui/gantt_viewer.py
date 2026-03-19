@@ -37,7 +37,10 @@ class GanttViewer(ttk.Frame):
             self.figure = plt.Figure(figsize=(12, 6))
             ax = self.figure.add_subplot(111)
             
-            colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7']
+            colors = ['#FF6B6B', '#4ECDC4', "#1C0CF3", '#96CEB4', '#FFEAA7', 
+                      "#EF0F0F", "#D602FB", "#FF9900", "#065A6C", "#0AFD8B", 
+                      "#F6FB01", "#FF05DE", "#11863C", "#710350", "#A9CE3B",
+                      "#01FF09", "#5C5153", "#B48B73", "#00FBFF", "#222D8E"]
             
             job_list = list(schedule.keys())
             for job_idx, job_name in enumerate(job_list):
