@@ -113,6 +113,7 @@ class ExperimentPanel(ttk.Frame):
             ("Taxa Mutação:", "mutation_rate", "0.1"),
             ("Taxa Crossover:", "crossover_rate", "0.8"),
             ("Tamanho Elite:", "elite_size", "5"),
+            ("Tamanho Torneio:", "tournament_size", "3"),
             ("Peso Makespan:", "weight_makespan", "0.5"),
         ]
         
@@ -152,6 +153,7 @@ class ExperimentPanel(ttk.Frame):
                 'mutation_rate': float(self.ga_vars['mutation_rate'].get()),
                 'crossover_rate': float(self.ga_vars['crossover_rate'].get()),
                 'elite_size': int(self.ga_vars['elite_size'].get()),
+                'tournament_size': int(self.ga_vars['tournament_size'].get()),
                 'weight_makespan': float(self.ga_vars['weight_makespan'].get())
             }
             return ga, params
