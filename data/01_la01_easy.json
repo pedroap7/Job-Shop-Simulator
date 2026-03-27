@@ -15,7 +15,7 @@
       "operations": [
         {"machine": 1, "time": 21, "next": 2},
         {"machine": 4, "time": 52, "next": 3},
-        {"machine": 3, "time": 16, "next": 4},
+        {"machine": 5, "time": 16, "next": 4},
         {"machine": 3, "time": 26, "next": 5},
         {"machine": 2, "time": 71, "next": null}
       ]
