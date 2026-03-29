@@ -153,7 +153,7 @@ class GeneticAlgorithm(Metaheuristic):
         for op in self.all_operations:
             if random.random() < self.mutation_rate:
                 current = mutated.get_priority(*op)
-                delta = random.randint(-40, 40)
+                delta = random.randint(-5, 5)
                 new_value = current + delta
                 new_value = max(1, min(50, new_value))
                 mutated.set_priority(*op, new_value)
