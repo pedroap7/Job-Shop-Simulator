@@ -114,7 +114,7 @@ class GeneticAlgorithm(Metaheuristic):
     
     def _evaluate(self, individual):
         scheduler = JobShopScheduler(self.problem_obj.data)
-        results = scheduler.simulate_with_user_priority(individual.priorities)
+        results = scheduler.simulate_with_user_priority(deepcopy(individual.priorities))
         
         makespan = results['makespan']
         tardiness = results['tardiness']
@@ -128,7 +128,7 @@ class GeneticAlgorithm(Metaheuristic):
     def _tournament_selection(self):
         indices = random.sample(range(len(self.population)), self.tournament_size)
         best_idx = min(indices, key=lambda i: self.fitness[i])
-        return self.population[best_idx].copy()
+        return deepcopy(self.population[best_idx])
     
     def _crossover(self, parent1, parent2):
         if random.random() > self.crossover_rate:
@@ -148,7 +148,7 @@ class GeneticAlgorithm(Metaheuristic):
         return child1, child2
     
     def _mutate(self, individual):
-        mutated = individual.copy()
+        mutated = deepcopy(individual)
         
         for op in self.all_operations:
             if random.random() < self.mutation_rate:
@@ -157,7 +157,7 @@ class GeneticAlgorithm(Metaheuristic):
                 new_value = current + delta
                 new_value = max(1, min(50, new_value))
                 mutated.set_priority(*op, new_value)
-        
+                
         return mutated
     
     def step(self):
