@@ -69,6 +69,26 @@ class GeneticAlgorithm(Metaheuristic):
                 'max': 1,
                 'description': 'Peso do makespan'
             }
+            ,
+            'adaptive_mutation': {
+                'type': 'bool',
+                'default': False,
+                'description': 'Ativa taxa de mutação adaptativa baseada na diversidade'
+            },
+            'mutation_rate_min': {
+                'type': 'float',
+                'default': 0.01,
+                'min': 0.0,
+                'max': 0.5,
+                'description': 'Taxa de mutação mínima (quando diversidade alta)'
+            },
+            'mutation_rate_max': {
+                'type': 'float',
+                'default': 0.2,
+                'min': 0.01,
+                'max': 1.0,
+                'description': 'Taxa de mutação máxima (quando diversidade baixa)'
+            }
         }
     
     def initialize(self, **kwargs):
@@ -79,6 +99,12 @@ class GeneticAlgorithm(Metaheuristic):
         self.tournament_size = kwargs.get('tournament_size', 3)
         self.weight_makespan = kwargs.get('weight_makespan', 0.5)
         self.weight_tardiness = 1.0 - self.weight_makespan
+        # Adaptive mutation parameters
+        self.adaptive_mutation = kwargs.get('adaptive_mutation', False)
+        self.mutation_rate_min = kwargs.get('mutation_rate_min', 0.01)
+        self.mutation_rate_max = kwargs.get('mutation_rate_max', 0.2)
+        # store base for reference
+        self.base_mutation_rate = kwargs.get('mutation_rate', self.mutation_rate)
         
         self.params = {
             'population_size': self.population_size,
@@ -88,6 +114,9 @@ class GeneticAlgorithm(Metaheuristic):
             'tournament_size': self.tournament_size,
             'weight_makespan': self.weight_makespan,
             'weight_tardiness': self.weight_tardiness
+            , 'adaptive_mutation': self.adaptive_mutation,
+            'mutation_rate_min': self.mutation_rate_min,
+            'mutation_rate_max': self.mutation_rate_max
         }
         
         if kwargs.get('initial_population'):
@@ -149,7 +178,6 @@ class GeneticAlgorithm(Metaheuristic):
     
     def _mutate(self, individual):
         mutated = deepcopy(individual)
-        
         for op in self.all_operations:
             if random.random() < self.mutation_rate:
                 current = mutated.get_priority(*op)
@@ -157,12 +185,36 @@ class GeneticAlgorithm(Metaheuristic):
                 new_value = current + delta
                 new_value = max(1, min(50, new_value))
                 mutated.set_priority(*op, new_value)
-                
+        
         return mutated
+
+    def _compute_diversity(self):
+        """
+        Computa uma medida simples de diversidade da população baseada
+        na proporção média de valores únicos de prioridade por operação.
+        Retorna valor no intervalo [0,1], onde 0 = nenhuma diversidade, 1 = alta diversidade.
+        """
+        if not self.population:
+            return 0.0
+
+        total_ratio = 0.0
+        for op in self.all_operations:
+            values = [ind.get_priority(*op) for ind in self.population]
+            unique = len(set(values))
+            ratio = unique / 50.0
+            total_ratio += ratio
+
+        return total_ratio / max(1, len(self.all_operations))
     
     def step(self):
         new_population = []
         new_fitness = []
+
+        # If adaptive mutation is enabled, adjust mutation_rate based on population diversity
+        if getattr(self, 'adaptive_mutation', False):
+            div = self._compute_diversity()
+            # diversity in [0,1]; lower diversity -> higher mutation
+            self.mutation_rate = self.mutation_rate_min + (self.mutation_rate_max - self.mutation_rate_min) * (1 - div)
         
         # Elitismo
         elite_indices = sorted(range(len(self.fitness)), key=lambda i: self.fitness[i])[:self.elite_size]

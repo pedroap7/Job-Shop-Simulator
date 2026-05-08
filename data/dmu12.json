@@ -1,0 +1,605 @@
+{
+  "jobs": {
+    "Job1": {
+      "due_date": 2473,
+      "operations": [
+        {"machine": 10, "time": 49, "next": 2},
+        {"machine": 13, "time": 196, "next": 3},
+        {"machine": 2, "time": 165, "next": 4},
+        {"machine": 6, "time": 173, "next": 5},
+        {"machine": 15, "time": 95, "next": 6},
+        {"machine": 14, "time": 170, "next": 7},
+        {"machine": 1, "time": 59, "next": 8},
+        {"machine": 3, "time": 169, "next": 9},
+        {"machine": 7, "time": 17, "next": 10},
+        {"machine": 9, "time": 89, "next": 11},
+        {"machine": 4, "time": 195, "next": 12},
+        {"machine": 8, "time": 71, "next": 13},
+        {"machine": 12, "time": 123, "next": 14},
+        {"machine": 5, "time": 191, "next": 15},
+        {"machine": 11, "time": 140, "next": null}
+      ]
+    },
+    "Job2": {
+      "due_date": 1663,
+      "operations": [
+        {"machine": 6, "time": 108, "next": 2},
+        {"machine": 2, "time": 132, "next": 3},
+        {"machine": 5, "time": 78, "next": 4},
+        {"machine": 15, "time": 75, "next": 5},
+        {"machine": 1, "time": 69, "next": 6},
+        {"machine": 9, "time": 185, "next": 7},
+        {"machine": 11, "time": 189, "next": 8},
+        {"machine": 7, "time": 138, "next": 9},
+        {"machine": 3, "time": 50, "next": 10},
+        {"machine": 4, "time": 140, "next": 11},
+        {"machine": 10, "time": 26, "next": 12},
+        {"machine": 8, "time": 9, "next": 13},
+        {"machine": 14, "time": 51, "next": 14},
+        {"machine": 12, "time": 13, "next": 15},
+        {"machine": 13, "time": 16, "next": null}
+      ]
+    },
+    "Job3": {
+      "due_date": 1956,
+      "operations": [
+        {"machine": 3, "time": 107, "next": 2},
+        {"machine": 9, "time": 147, "next": 3},
+        {"machine": 2, "time": 110, "next": 4},
+        {"machine": 1, "time": 163, "next": 5},
+        {"machine": 13, "time": 165, "next": 6},
+        {"machine": 8, "time": 22, "next": 7},
+        {"machine": 10, "time": 98, "next": 8},
+        {"machine": 6, "time": 137, "next": 9},
+        {"machine": 12, "time": 7, "next": 10},
+        {"machine": 11, "time": 56, "next": 11},
+        {"machine": 4, "time": 111, "next": 12},
+        {"machine": 7, "time": 38, "next": 13},
+        {"machine": 14, "time": 36, "next": 14},
+        {"machine": 15, "time": 159, "next": 15},
+        {"machine": 5, "time": 149, "next": null}
+      ]
+    },
+    "Job4": {
+      "due_date": 1845,
+      "operations": [
+        {"machine": 15, "time": 44, "next": 2},
+        {"machine": 3, "time": 103, "next": 3},
+        {"machine": 6, "time": 23, "next": 4},
+        {"machine": 10, "time": 77, "next": 5},
+        {"machine": 7, "time": 13, "next": 6},
+        {"machine": 4, "time": 149, "next": 7},
+        {"machine": 12, "time": 66, "next": 8},
+        {"machine": 1, "time": 131, "next": 9},
+        {"machine": 13, "time": 63, "next": 10},
+        {"machine": 2, "time": 139, "next": 11},
+        {"machine": 14, "time": 125, "next": 12},
+        {"machine": 5, "time": 128, "next": 13},
+        {"machine": 8, "time": 167, "next": 14},
+        {"machine": 9, "time": 88, "next": 15},
+        {"machine": 11, "time": 103, "next": null}
+      ]
+    },
+    "Job5": {
+      "due_date": 2213,
+      "operations": [
+        {"machine": 1, "time": 173, "next": 2},
+        {"machine": 2, "time": 35, "next": 3},
+        {"machine": 6, "time": 188, "next": 4},
+        {"machine": 15, "time": 168, "next": 5},
+        {"machine": 11, "time": 140, "next": 6},
+        {"machine": 4, "time": 158, "next": 7},
+        {"machine": 10, "time": 46, "next": 8},
+        {"machine": 13, "time": 71, "next": 9},
+        {"machine": 9, "time": 187, "next": 10},
+        {"machine": 14, "time": 143, "next": 11},
+        {"machine": 3, "time": 179, "next": 12},
+        {"machine": 7, "time": 25, "next": 13},
+        {"machine": 12, "time": 39, "next": 14},
+        {"machine": 8, "time": 59, "next": 15},
+        {"machine": 5, "time": 91, "next": null}
+      ]
+    },
+    "Job6": {
+      "due_date": 2051,
+      "operations": [
+        {"machine": 3, "time": 100, "next": 2},
+        {"machine": 6, "time": 112, "next": 3},
+        {"machine": 13, "time": 183, "next": 4},
+        {"machine": 11, "time": 170, "next": 5},
+        {"machine": 1, "time": 84, "next": 6},
+        {"machine": 9, "time": 22, "next": 7},
+        {"machine": 14, "time": 178, "next": 8},
+        {"machine": 7, "time": 91, "next": 9},
+        {"machine": 10, "time": 84, "next": 10},
+        {"machine": 15, "time": 67, "next": 11},
+        {"machine": 4, "time": 8, "next": 12},
+        {"machine": 2, "time": 137, "next": 13},
+        {"machine": 12, "time": 130, "next": 14},
+        {"machine": 8, "time": 35, "next": 15},
+        {"machine": 5, "time": 177, "next": null}
+      ]
+    },
+    "Job7": {
+      "due_date": 1911,
+      "operations": [
+        {"machine": 4, "time": 73, "next": 2},
+        {"machine": 3, "time": 101, "next": 3},
+        {"machine": 1, "time": 80, "next": 4},
+        {"machine": 8, "time": 138, "next": 5},
+        {"machine": 6, "time": 179, "next": 6},
+        {"machine": 15, "time": 148, "next": 7},
+        {"machine": 11, "time": 136, "next": 8},
+        {"machine": 13, "time": 105, "next": 9},
+        {"machine": 7, "time": 141, "next": 10},
+        {"machine": 12, "time": 135, "next": 11},
+        {"machine": 2, "time": 35, "next": 12},
+        {"machine": 9, "time": 12, "next": 13},
+        {"machine": 5, "time": 75, "next": 14},
+        {"machine": 14, "time": 34, "next": 15},
+        {"machine": 10, "time": 78, "next": null}
+      ]
+    },
+    "Job8": {
+      "due_date": 2127,
+      "operations": [
+        {"machine": 8, "time": 74, "next": 2},
+        {"machine": 15, "time": 82, "next": 3},
+        {"machine": 13, "time": 176, "next": 4},
+        {"machine": 4, "time": 172, "next": 5},
+        {"machine": 1, "time": 113, "next": 6},
+        {"machine": 12, "time": 50, "next": 7},
+        {"machine": 14, "time": 93, "next": 8},
+        {"machine": 3, "time": 44, "next": 9},
+        {"machine": 7, "time": 46, "next": 10},
+        {"machine": 10, "time": 126, "next": 11},
+        {"machine": 9, "time": 193, "next": 12},
+        {"machine": 2, "time": 185, "next": 13},
+        {"machine": 5, "time": 92, "next": 14},
+        {"machine": 6, "time": 92, "next": 15},
+        {"machine": 11, "time": 98, "next": null}
+      ]
+    },
+    "Job9": {
+      "due_date": 2179,
+      "operations": [
+        {"machine": 7, "time": 163, "next": 2},
+        {"machine": 6, "time": 47, "next": 3},
+        {"machine": 11, "time": 13, "next": 4},
+        {"machine": 5, "time": 152, "next": 5},
+        {"machine": 4, "time": 153, "next": 6},
+        {"machine": 12, "time": 162, "next": 7},
+        {"machine": 8, "time": 145, "next": 8},
+        {"machine": 1, "time": 12, "next": 9},
+        {"machine": 13, "time": 115, "next": 10},
+        {"machine": 14, "time": 165, "next": 11},
+        {"machine": 9, "time": 146, "next": 12},
+        {"machine": 15, "time": 154, "next": 13},
+        {"machine": 10, "time": 151, "next": 14},
+        {"machine": 3, "time": 42, "next": 15},
+        {"machine": 2, "time": 56, "next": null}
+      ]
+    },
+    "Job10": {
+      "due_date": 2001,
+      "operations": [
+        {"machine": 3, "time": 131, "next": 2},
+        {"machine": 15, "time": 176, "next": 3},
+        {"machine": 7, "time": 21, "next": 4},
+        {"machine": 2, "time": 199, "next": 5},
+        {"machine": 6, "time": 22, "next": 6},
+        {"machine": 13, "time": 100, "next": 7},
+        {"machine": 5, "time": 92, "next": 8},
+        {"machine": 1, "time": 130, "next": 9},
+        {"machine": 8, "time": 109, "next": 10},
+        {"machine": 4, "time": 46, "next": 11},
+        {"machine": 9, "time": 144, "next": 12},
+        {"machine": 10, "time": 161, "next": 13},
+        {"machine": 14, "time": 162, "next": 14},
+        {"machine": 12, "time": 28, "next": 15},
+        {"machine": 11, "time": 18, "next": null}
+      ]
+    },
+    "Job11": {
+      "due_date": 2249,
+      "operations": [
+        {"machine": 5, "time": 51, "next": 2},
+        {"machine": 2, "time": 19, "next": 3},
+        {"machine": 11, "time": 166, "next": 4},
+        {"machine": 13, "time": 58, "next": 5},
+        {"machine": 14, "time": 171, "next": 6},
+        {"machine": 1, "time": 69, "next": 7},
+        {"machine": 4, "time": 30, "next": 8},
+        {"machine": 7, "time": 38, "next": 9},
+        {"machine": 15, "time": 196, "next": 10},
+        {"machine": 9, "time": 176, "next": 11},
+        {"machine": 10, "time": 180, "next": 12},
+        {"machine": 12, "time": 175, "next": 13},
+        {"machine": 3, "time": 175, "next": 14},
+        {"machine": 8, "time": 52, "next": 15},
+        {"machine": 6, "time": 174, "next": null}
+      ]
+    },
+    "Job12": {
+      "due_date": 1563,
+      "operations": [
+        {"machine": 2, "time": 8, "next": 2},
+        {"machine": 6, "time": 187, "next": 3},
+        {"machine": 10, "time": 62, "next": 4},
+        {"machine": 5, "time": 32, "next": 5},
+        {"machine": 11, "time": 191, "next": 6},
+        {"machine": 7, "time": 28, "next": 7},
+        {"machine": 14, "time": 23, "next": 8},
+        {"machine": 9, "time": 18, "next": 9},
+        {"machine": 4, "time": 32, "next": 10},
+        {"machine": 3, "time": 94, "next": 11},
+        {"machine": 8, "time": 181, "next": 12},
+        {"machine": 13, "time": 112, "next": 13},
+        {"machine": 12, "time": 108, "next": 14},
+        {"machine": 15, "time": 35, "next": 15},
+        {"machine": 1, "time": 91, "next": null}
+      ]
+    },
+    "Job13": {
+      "due_date": 2272,
+      "operations": [
+        {"machine": 6, "time": 169, "next": 2},
+        {"machine": 1, "time": 13, "next": 3},
+        {"machine": 13, "time": 170, "next": 4},
+        {"machine": 11, "time": 189, "next": 5},
+        {"machine": 10, "time": 4, "next": 6},
+        {"machine": 7, "time": 165, "next": 7},
+        {"machine": 5, "time": 196, "next": 8},
+        {"machine": 12, "time": 65, "next": 9},
+        {"machine": 15, "time": 187, "next": 10},
+        {"machine": 8, "time": 170, "next": 11},
+        {"machine": 2, "time": 56, "next": 12},
+        {"machine": 4, "time": 135, "next": 13},
+        {"machine": 14, "time": 21, "next": 14},
+        {"machine": 3, "time": 187, "next": 15},
+        {"machine": 9, "time": 21, "next": null}
+      ]
+    },
+    "Job14": {
+      "due_date": 2328,
+      "operations": [
+        {"machine": 13, "time": 33, "next": 2},
+        {"machine": 14, "time": 186, "next": 3},
+        {"machine": 1, "time": 157, "next": 4},
+        {"machine": 8, "time": 107, "next": 5},
+        {"machine": 15, "time": 4, "next": 6},
+        {"machine": 9, "time": 37, "next": 7},
+        {"machine": 5, "time": 132, "next": 8},
+        {"machine": 7, "time": 182, "next": 9},
+        {"machine": 12, "time": 197, "next": 10},
+        {"machine": 4, "time": 165, "next": 11},
+        {"machine": 2, "time": 154, "next": 12},
+        {"machine": 3, "time": 152, "next": 13},
+        {"machine": 10, "time": 1, "next": 14},
+        {"machine": 11, "time": 106, "next": 15},
+        {"machine": 6, "time": 178, "next": null}
+      ]
+    },
+    "Job15": {
+      "due_date": 2378,
+      "operations": [
+        {"machine": 3, "time": 21, "next": 2},
+        {"machine": 7, "time": 48, "next": 3},
+        {"machine": 11, "time": 132, "next": 4},
+        {"machine": 13, "time": 190, "next": 5},
+        {"machine": 6, "time": 159, "next": 6},
+        {"machine": 15, "time": 54, "next": 7},
+        {"machine": 4, "time": 1, "next": 8},
+        {"machine": 9, "time": 58, "next": 9},
+        {"machine": 5, "time": 187, "next": 10},
+        {"machine": 14, "time": 175, "next": 11},
+        {"machine": 10, "time": 157, "next": 12},
+        {"machine": 2, "time": 172, "next": 13},
+        {"machine": 8, "time": 173, "next": 14},
+        {"machine": 12, "time": 148, "next": 15},
+        {"machine": 1, "time": 154, "next": null}
+      ]
+    },
+    "Job16": {
+      "due_date": 1842,
+      "operations": [
+        {"machine": 2, "time": 186, "next": 2},
+        {"machine": 1, "time": 20, "next": 3},
+        {"machine": 6, "time": 152, "next": 4},
+        {"machine": 5, "time": 187, "next": 5},
+        {"machine": 14, "time": 162, "next": 6},
+        {"machine": 8, "time": 85, "next": 7},
+        {"machine": 11, "time": 1, "next": 8},
+        {"machine": 10, "time": 32, "next": 9},
+        {"machine": 7, "time": 52, "next": 10},
+        {"machine": 4, "time": 176, "next": 11},
+        {"machine": 9, "time": 29, "next": 12},
+        {"machine": 15, "time": 12, "next": 13},
+        {"machine": 3, "time": 99, "next": 14},
+        {"machine": 13, "time": 107, "next": 15},
+        {"machine": 12, "time": 117, "next": null}
+      ]
+    },
+    "Job17": {
+      "due_date": 1936,
+      "operations": [
+        {"machine": 15, "time": 55, "next": 2},
+        {"machine": 5, "time": 38, "next": 3},
+        {"machine": 14, "time": 144, "next": 4},
+        {"machine": 8, "time": 97, "next": 5},
+        {"machine": 10, "time": 135, "next": 6},
+        {"machine": 13, "time": 76, "next": 7},
+        {"machine": 2, "time": 57, "next": 8},
+        {"machine": 7, "time": 140, "next": 9},
+        {"machine": 1, "time": 112, "next": 10},
+        {"machine": 11, "time": 28, "next": 11},
+        {"machine": 4, "time": 162, "next": 12},
+        {"machine": 3, "time": 107, "next": 13},
+        {"machine": 6, "time": 97, "next": 14},
+        {"machine": 9, "time": 123, "next": 15},
+        {"machine": 12, "time": 118, "next": null}
+      ]
+    },
+    "Job18": {
+      "due_date": 1556,
+      "operations": [
+        {"machine": 8, "time": 109, "next": 2},
+        {"machine": 2, "time": 155, "next": 3},
+        {"machine": 3, "time": 134, "next": 4},
+        {"machine": 7, "time": 72, "next": 5},
+        {"machine": 10, "time": 37, "next": 6},
+        {"machine": 14, "time": 104, "next": 7},
+        {"machine": 1, "time": 23, "next": 8},
+        {"machine": 6, "time": 52, "next": 9},
+        {"machine": 15, "time": 10, "next": 10},
+        {"machine": 13, "time": 195, "next": 11},
+        {"machine": 11, "time": 108, "next": 12},
+        {"machine": 9, "time": 91, "next": 13},
+        {"machine": 4, "time": 24, "next": 14},
+        {"machine": 12, "time": 33, "next": 15},
+        {"machine": 5, "time": 50, "next": null}
+      ]
+    },
+    "Job19": {
+      "due_date": 2075,
+      "operations": [
+        {"machine": 11, "time": 47, "next": 2},
+        {"machine": 6, "time": 173, "next": 3},
+        {"machine": 13, "time": 26, "next": 4},
+        {"machine": 8, "time": 180, "next": 5},
+        {"machine": 1, "time": 104, "next": 6},
+        {"machine": 2, "time": 30, "next": 7},
+        {"machine": 15, "time": 154, "next": 8},
+        {"machine": 7, "time": 33, "next": 9},
+        {"machine": 5, "time": 199, "next": 10},
+        {"machine": 9, "time": 90, "next": 11},
+        {"machine": 4, "time": 67, "next": 12},
+        {"machine": 3, "time": 92, "next": 13},
+        {"machine": 14, "time": 81, "next": 14},
+        {"machine": 12, "time": 142, "next": 15},
+        {"machine": 10, "time": 178, "next": null}
+      ]
+    },
+    "Job20": {
+      "due_date": 1192,
+      "operations": [
+        {"machine": 15, "time": 11, "next": 2},
+        {"machine": 7, "time": 117, "next": 3},
+        {"machine": 2, "time": 88, "next": 4},
+        {"machine": 6, "time": 77, "next": 5},
+        {"machine": 11, "time": 10, "next": 6},
+        {"machine": 12, "time": 98, "next": 7},
+        {"machine": 14, "time": 14, "next": 8},
+        {"machine": 13, "time": 35, "next": 9},
+        {"machine": 9, "time": 189, "next": 10},
+        {"machine": 4, "time": 58, "next": 11},
+        {"machine": 1, "time": 121, "next": 12},
+        {"machine": 5, "time": 13, "next": 13},
+        {"machine": 10, "time": 26, "next": 14},
+        {"machine": 3, "time": 8, "next": 15},
+        {"machine": 8, "time": 52, "next": null}
+      ]
+    },
+    "Job21": {
+      "due_date": 1971,
+      "operations": [
+        {"machine": 4, "time": 93, "next": 2},
+        {"machine": 11, "time": 121, "next": 3},
+        {"machine": 10, "time": 186, "next": 4},
+        {"machine": 9, "time": 103, "next": 5},
+        {"machine": 13, "time": 62, "next": 6},
+        {"machine": 1, "time": 90, "next": 7},
+        {"machine": 14, "time": 182, "next": 8},
+        {"machine": 7, "time": 15, "next": 9},
+        {"machine": 15, "time": 109, "next": 10},
+        {"machine": 3, "time": 39, "next": 11},
+        {"machine": 2, "time": 58, "next": 12},
+        {"machine": 5, "time": 185, "next": 13},
+        {"machine": 6, "time": 48, "next": 14},
+        {"machine": 12, "time": 95, "next": 15},
+        {"machine": 8, "time": 130, "next": null}
+      ]
+    },
+    "Job22": {
+      "due_date": 2068,
+      "operations": [
+        {"machine": 14, "time": 135, "next": 2},
+        {"machine": 15, "time": 193, "next": 3},
+        {"machine": 3, "time": 163, "next": 4},
+        {"machine": 6, "time": 77, "next": 5},
+        {"machine": 2, "time": 115, "next": 6},
+        {"machine": 12, "time": 77, "next": 7},
+        {"machine": 10, "time": 9, "next": 8},
+        {"machine": 9, "time": 132, "next": 9},
+        {"machine": 13, "time": 144, "next": 10},
+        {"machine": 4, "time": 90, "next": 11},
+        {"machine": 1, "time": 105, "next": 12},
+        {"machine": 7, "time": 92, "next": 13},
+        {"machine": 11, "time": 169, "next": 14},
+        {"machine": 5, "time": 42, "next": 15},
+        {"machine": 8, "time": 48, "next": null}
+      ]
+    },
+    "Job23": {
+      "due_date": 1881,
+      "operations": [
+        {"machine": 14, "time": 169, "next": 2},
+        {"machine": 5, "time": 140, "next": 3},
+        {"machine": 2, "time": 113, "next": 4},
+        {"machine": 13, "time": 172, "next": 5},
+        {"machine": 11, "time": 43, "next": 6},
+        {"machine": 4, "time": 33, "next": 7},
+        {"machine": 6, "time": 80, "next": 8},
+        {"machine": 1, "time": 94, "next": 9},
+        {"machine": 15, "time": 163, "next": 10},
+        {"machine": 10, "time": 14, "next": 11},
+        {"machine": 12, "time": 96, "next": 12},
+        {"machine": 9, "time": 25, "next": 13},
+        {"machine": 7, "time": 101, "next": 14},
+        {"machine": 8, "time": 99, "next": 15},
+        {"machine": 3, "time": 105, "next": null}
+      ]
+    },
+    "Job24": {
+      "due_date": 1919,
+      "operations": [
+        {"machine": 1, "time": 84, "next": 2},
+        {"machine": 8, "time": 180, "next": 3},
+        {"machine": 3, "time": 81, "next": 4},
+        {"machine": 13, "time": 195, "next": 5},
+        {"machine": 4, "time": 100, "next": 6},
+        {"machine": 10, "time": 12, "next": 7},
+        {"machine": 7, "time": 15, "next": 8},
+        {"machine": 11, "time": 155, "next": 9},
+        {"machine": 12, "time": 71, "next": 10},
+        {"machine": 6, "time": 15, "next": 11},
+        {"machine": 5, "time": 180, "next": 12},
+        {"machine": 14, "time": 117, "next": 13},
+        {"machine": 2, "time": 41, "next": 14},
+        {"machine": 9, "time": 107, "next": 15},
+        {"machine": 15, "time": 123, "next": null}
+      ]
+    },
+    "Job25": {
+      "due_date": 1790,
+      "operations": [
+        {"machine": 7, "time": 102, "next": 2},
+        {"machine": 4, "time": 34, "next": 3},
+        {"machine": 10, "time": 186, "next": 4},
+        {"machine": 6, "time": 147, "next": 5},
+        {"machine": 3, "time": 20, "next": 6},
+        {"machine": 11, "time": 115, "next": 7},
+        {"machine": 12, "time": 21, "next": 8},
+        {"machine": 9, "time": 24, "next": 9},
+        {"machine": 13, "time": 139, "next": 10},
+        {"machine": 15, "time": 119, "next": 11},
+        {"machine": 8, "time": 166, "next": 12},
+        {"machine": 2, "time": 120, "next": 13},
+        {"machine": 14, "time": 119, "next": 14},
+        {"machine": 1, "time": 53, "next": 15},
+        {"machine": 5, "time": 12, "next": null}
+      ]
+    },
+    "Job26": {
+      "due_date": 2042,
+      "operations": [
+        {"machine": 9, "time": 99, "next": 2},
+        {"machine": 10, "time": 165, "next": 3},
+        {"machine": 8, "time": 11, "next": 4},
+        {"machine": 13, "time": 191, "next": 5},
+        {"machine": 1, "time": 22, "next": 6},
+        {"machine": 11, "time": 150, "next": 7},
+        {"machine": 5, "time": 26, "next": 8},
+        {"machine": 7, "time": 125, "next": 9},
+        {"machine": 12, "time": 193, "next": 10},
+        {"machine": 6, "time": 136, "next": 11},
+        {"machine": 2, "time": 52, "next": 12},
+        {"machine": 14, "time": 89, "next": 13},
+        {"machine": 3, "time": 115, "next": 14},
+        {"machine": 4, "time": 118, "next": 15},
+        {"machine": 15, "time": 79, "next": null}
+      ]
+    },
+    "Job27": {
+      "due_date": 2093,
+      "operations": [
+        {"machine": 8, "time": 117, "next": 2},
+        {"machine": 13, "time": 5, "next": 3},
+        {"machine": 5, "time": 128, "next": 4},
+        {"machine": 2, "time": 76, "next": 5},
+        {"machine": 1, "time": 101, "next": 6},
+        {"machine": 10, "time": 178, "next": 7},
+        {"machine": 6, "time": 33, "next": 8},
+        {"machine": 15, "time": 158, "next": 9},
+        {"machine": 3, "time": 188, "next": 10},
+        {"machine": 12, "time": 165, "next": 11},
+        {"machine": 11, "time": 45, "next": 12},
+        {"machine": 4, "time": 190, "next": 13},
+        {"machine": 7, "time": 76, "next": 14},
+        {"machine": 9, "time": 17, "next": 15},
+        {"machine": 14, "time": 133, "next": null}
+      ]
+    },
+    "Job28": {
+      "due_date": 2086,
+      "operations": [
+        {"machine": 5, "time": 96, "next": 2},
+        {"machine": 3, "time": 188, "next": 3},
+        {"machine": 14, "time": 60, "next": 4},
+        {"machine": 15, "time": 84, "next": 5},
+        {"machine": 8, "time": 53, "next": 6},
+        {"machine": 4, "time": 195, "next": 7},
+        {"machine": 12, "time": 4, "next": 8},
+        {"machine": 9, "time": 32, "next": 9},
+        {"machine": 10, "time": 147, "next": 10},
+        {"machine": 11, "time": 187, "next": 11},
+        {"machine": 6, "time": 85, "next": 12},
+        {"machine": 7, "time": 41, "next": 13},
+        {"machine": 2, "time": 82, "next": 14},
+        {"machine": 1, "time": 187, "next": 15},
+        {"machine": 13, "time": 164, "next": null}
+      ]
+    },
+    "Job29": {
+      "due_date": 2283,
+      "operations": [
+        {"machine": 1, "time": 156, "next": 2},
+        {"machine": 15, "time": 107, "next": 3},
+        {"machine": 10, "time": 98, "next": 4},
+        {"machine": 4, "time": 152, "next": 5},
+        {"machine": 5, "time": 196, "next": 6},
+        {"machine": 6, "time": 147, "next": 7},
+        {"machine": 13, "time": 105, "next": 8},
+        {"machine": 9, "time": 193, "next": 9},
+        {"machine": 3, "time": 61, "next": 10},
+        {"machine": 12, "time": 57, "next": 11},
+        {"machine": 8, "time": 163, "next": 12},
+        {"machine": 14, "time": 104, "next": 13},
+        {"machine": 2, "time": 177, "next": 14},
+        {"machine": 11, "time": 36, "next": 15},
+        {"machine": 7, "time": 4, "next": null}
+      ]
+    },
+    "Job30": {
+      "due_date": 1899,
+      "operations": [
+        {"machine": 4, "time": 143, "next": 2},
+        {"machine": 2, "time": 136, "next": 3},
+        {"machine": 10, "time": 100, "next": 4},
+        {"machine": 8, "time": 168, "next": 5},
+        {"machine": 13, "time": 96, "next": 6},
+        {"machine": 9, "time": 43, "next": 7},
+        {"machine": 6, "time": 5, "next": 8},
+        {"machine": 1, "time": 3, "next": 9},
+        {"machine": 3, "time": 197, "next": 10},
+        {"machine": 11, "time": 198, "next": 11},
+        {"machine": 7, "time": 4, "next": 12},
+        {"machine": 5, "time": 134, "next": 13},
+        {"machine": 15, "time": 172, "next": 14},
+        {"machine": 14, "time": 39, "next": 15},
+        {"machine": 12, "time": 23, "next": null}
+      ]
+    }
+  },
+  "machines": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+}

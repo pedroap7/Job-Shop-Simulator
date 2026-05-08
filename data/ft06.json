@@ -1,0 +1,71 @@
+{
+  "jobs": {
+    "Job1": {
+      "due_date": 34,
+      "operations": [
+        {"machine": 3, "time": 1, "next": 2},
+        {"machine": 1, "time": 3, "next": 3},
+        {"machine": 2, "time": 6, "next": 4},
+        {"machine": 4, "time": 7, "next": 5},
+        {"machine": 6, "time": 3, "next": 6},
+        {"machine": 5, "time": 6, "next": null}
+      ]
+    },
+    "Job2": {
+      "due_date": 61,
+      "operations": [
+        {"machine": 2, "time": 8, "next": 2},
+        {"machine": 3, "time": 5, "next": 3},
+        {"machine": 5, "time": 10, "next": 4},
+        {"machine": 6, "time": 10, "next": 5},
+        {"machine": 1, "time": 10, "next": 6},
+        {"machine": 4, "time": 4, "next": null}
+      ]
+    },
+    "Job3": {
+      "due_date": 44,
+      "operations": [
+        {"machine": 3, "time": 5, "next": 2},
+        {"machine": 4, "time": 4, "next": 3},
+        {"machine": 6, "time": 8, "next": 4},
+        {"machine": 1, "time": 9, "next": 5},
+        {"machine": 2, "time": 1, "next": 6},
+        {"machine": 5, "time": 7, "next": null}
+      ]
+    },
+    "Job4": {
+      "due_date": 46,
+      "operations": [
+        {"machine": 2, "time": 5, "next": 2},
+        {"machine": 1, "time": 5, "next": 3},
+        {"machine": 3, "time": 5, "next": 4},
+        {"machine": 4, "time": 3, "next": 5},
+        {"machine": 5, "time": 8, "next": 6},
+        {"machine": 6, "time": 9, "next": null}
+      ]
+    },
+    "Job5": {
+      "due_date": 32,
+      "operations": [
+        {"machine": 3, "time": 9, "next": 2},
+        {"machine": 2, "time": 3, "next": 3},
+        {"machine": 5, "time": 5, "next": 4},
+        {"machine": 6, "time": 4, "next": 5},
+        {"machine": 1, "time": 3, "next": 6},
+        {"machine": 4, "time": 1, "next": null}
+      ]
+    },
+    "Job6": {
+      "due_date": 39,
+      "operations": [
+        {"machine": 2, "time": 3, "next": 2},
+        {"machine": 4, "time": 3, "next": 3},
+        {"machine": 6, "time": 9, "next": 4},
+        {"machine": 1, "time": 10, "next": 5},
+        {"machine": 5, "time": 4, "next": 6},
+        {"machine": 3, "time": 1, "next": null}
+      ]
+    }
+  },
+  "machines": [1, 2, 3, 4, 5, 6]
+}

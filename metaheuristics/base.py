@@ -46,6 +46,8 @@ class Metaheuristic(ABC):
         Executa a metaheurística por um número máximo de iterações
         """
         self.initialize(**kwargs)
+        import time
+        start_time = time.time()
         
         for iteration in range(max_iterations):
             self.iteration = iteration
@@ -65,6 +67,7 @@ class Metaheuristic(ABC):
                     break
         
         final_results = self.evaluate_solution(self.best_solution)
+        self.execution_time = time.time() - start_time
         
         return {
             'name': self.name,

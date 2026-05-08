@@ -128,7 +128,7 @@ class MainWindow:
     def create_main_layout(self):
         """Cria layout principal"""
         # Painel esquerdo
-        left_panel = ttk.Frame(self.root, width=400)
+        left_panel = ttk.Frame(self.root, width=520)
         left_panel.pack(side=tk.LEFT, fill=tk.Y, padx=5, pady=5)
         left_panel.pack_propagate(False)
         
@@ -202,24 +202,21 @@ class MainWindow:
         
         scrollbar = ttk.Scrollbar(self.results_frame, orient=tk.VERTICAL, command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar.set)
-        
+
+        # Tree on the left, scrollbar immediately to its right, and action buttons stacked vertically on the far right.
         self.tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        
+        scrollbar.pack(side=tk.LEFT, fill=tk.Y)
+
         self.tree.bind('<<TreeviewSelect>>', self.on_experiment_select)
-        
-        # Botões
+
+        # Botões empilhados à direita para reduzir largura horizontal
         button_frame = ttk.Frame(self.results_frame)
-        button_frame.pack(fill=tk.X, pady=5)
-        
-        ttk.Button(button_frame, text="Ver Gantt", 
-                  command=self.show_selected_gantt).pack(side=tk.LEFT, padx=5)
-        ttk.Button(button_frame, text="Ver Evolução", 
-                  command=self.show_selected_evolution).pack(side=tk.LEFT, padx=5)
-        ttk.Button(button_frame, text="Salvar", 
-                  command=self.save_selected).pack(side=tk.LEFT, padx=5)
-        ttk.Button(button_frame, text="Remover", 
-                  command=self.remove_selected).pack(side=tk.LEFT, padx=5)
+        button_frame.pack(side=tk.RIGHT, fill=tk.Y, padx=5, pady=5)
+
+        ttk.Button(button_frame, text="Ver Gantt", command=self.show_selected_gantt).pack(side=tk.TOP, fill=tk.X, pady=4)
+        ttk.Button(button_frame, text="Ver Evolução", command=self.show_selected_evolution).pack(side=tk.TOP, fill=tk.X, pady=4)
+        ttk.Button(button_frame, text="Salvar", command=self.save_selected).pack(side=tk.TOP, fill=tk.X, pady=4)
+        ttk.Button(button_frame, text="Remover", command=self.remove_selected).pack(side=tk.TOP, fill=tk.X, pady=4)
         
     def load_instance(self):
         """Carrega nova instância do problema"""
