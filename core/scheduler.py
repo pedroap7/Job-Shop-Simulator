@@ -24,6 +24,7 @@ class JobShopScheduler:
         self.operation_queue = {m: [] for m in self.machines}
         self.processed_ops = set()
         self.event_counter = 0
+        self.current_priorities = None
         
     def initialize_first_operations(self):
         """Inicializa as primeiras operações de cada job"""
@@ -42,13 +43,17 @@ class JobShopScheduler:
     def get_next_operation_for_machine(self, machine):
         """
         Retorna a próxima operação para uma máquina específica
-        Aplica critérios de desempate: FIFO -> SPT -> Alfabética
+        Aplica critérios de desempate: GA -> FIFO -> SPT -> Alfabética
         """
         ready_ops = [op for op in self.operation_queue[machine] 
                     if op['ready_time'] <= self.current_time]
         
         if not ready_ops:
             return None
+        
+        if hasattr(self, 'current_priorities') and self.current_priorities:
+            ready_ops.sort(key=lambda x: self.current_priorities.get((x['job'], x['op_num']), float('inf')))
+            return ready_ops[0]
         
         # FIFO
         ready_ops.sort(key=lambda x: (x['arrival_time'], x['job']))
@@ -202,6 +207,7 @@ class JobShopScheduler:
         Executa simulação com prioridades definidas pelo usuário
         """
         self.reset()
+        self.current_priorities = priority_dict
         
         # Inicializa primeiras operações
         self.initialize_first_operations()
@@ -217,19 +223,8 @@ class JobShopScheduler:
             
             if event['type'] == 'check_machine':
                 machine = event['machine']
+                self.check_machine(machine)
                 
-                ready_ops = [op for op in self.operation_queue[machine] 
-                            if op['ready_time'] <= self.current_time]
-                
-                if ready_ops and self.current_time >= self.machine_available_time[machine]:
-                    # Ordena por prioridade do usuário
-                    ready_ops.sort(key=lambda x: priority_dict.get(
-                        (x['job'], x['op_num']), float('inf')))
-                    
-                    next_op = ready_ops[0]
-                    self.operation_queue[machine].remove(next_op)
-                    self.process_operation(next_op)
-                    
             elif event['type'] == 'operation_complete':
                 job = event['job']
                 op_num = event['op_num']
