@@ -16,22 +16,33 @@ class Solution:
         """
         self.problem = problem
         
+        # Determine dynamic priority range based on number of operations
+        try:
+            self.max_priority = problem.num_operations
+        except Exception:
+            # fallback to 50 if problem doesn't expose num_operations
+            self.max_priority = sum(len(job['operations']) for job in problem.jobs.values())
+
         if priorities:
             self.priorities = deepcopy(priorities)
         else:
-            # Solução inicial: todas prioridades 25
+            # Solução inicial: todas prioridades no meio do intervalo
+            mid = max(1, (self.max_priority + 1) // 2)
             self.priorities = {}
             for job_name in problem.jobs:
                 for op_num in range(1, len(problem.jobs[job_name]['operations']) + 1):
-                    self.priorities[(job_name, op_num)] = 25
+                    self.priorities[(job_name, op_num)] = mid
     
     def get_priority(self, job_name, op_num):
         """Retorna prioridade de uma operação"""
-        return self.priorities.get((job_name, op_num), 25)
+        return self.priorities.get((job_name, op_num), max(1, (self.max_priority + 1) // 2))
     
     def set_priority(self, job_name, op_num, priority):
         """Define prioridade de uma operação"""
-        self.priorities[(job_name, op_num)] = max(1, min(50, priority))
+        # clamp according to dynamic max priority
+        p = int(priority)
+        p = max(1, min(self.max_priority, p))
+        self.priorities[(job_name, op_num)] = p
     
     def mutate(self, operation=None, delta=None):
         """

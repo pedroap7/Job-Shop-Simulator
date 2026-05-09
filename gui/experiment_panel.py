@@ -77,9 +77,7 @@ class ExperimentPanel(ttk.Frame):
                                          command=self.run_repetitions)
         self.run_seq_button.pack(side=tk.LEFT, padx=5)
 
-        # Mutation rate display and repetitions input placed in the button frame to avoid layout overflow
-        self.mutation_label = ttk.Label(button_frame, text="Mutation rate: -")
-        self.mutation_label.pack(side=tk.LEFT, padx=8)
+        # Repetitions input placed in the button frame to avoid layout overflow
 
         ttk.Label(button_frame, text="Repetições:").pack(side=tk.LEFT, padx=(12,2))
         self.repetitions_var = tk.StringVar(value="5")
@@ -131,6 +129,7 @@ class ExperimentPanel(ttk.Frame):
             ("Tamanho Elite:", "elite_size", "5"),
             ("Tamanho Torneio:", "tournament_size", "3"),
             ("Peso Makespan:", "weight_makespan", "0.5"),
+            ("Injetar Aleatórios por Geração:", "random_injection", "0"),
         ]
         
         self.ga_vars = {}
@@ -171,6 +170,7 @@ class ExperimentPanel(ttk.Frame):
                 'elite_size': int(self.ga_vars['elite_size'].get()),
                 'tournament_size': int(self.ga_vars['tournament_size'].get()),
                 'weight_makespan': float(self.ga_vars['weight_makespan'].get())
+                    , 'random_injection': int(self.ga_vars.get('random_injection', tk.StringVar(value='0')).get())
             }
             return ga, params
     
@@ -197,7 +197,16 @@ class ExperimentPanel(ttk.Frame):
         self.running = True
         self.run_button.config(state=tk.DISABLED)
         self.stop_button.config(state=tk.NORMAL)
-        self.progress.start()
+        # Configure progressbar: determinate for iteration mode, indeterminate for time mode
+        if mode == 'iterations':
+            try:
+                max_val = int(limit)
+            except Exception:
+                max_val = 1000
+            self.progress.config(mode='determinate', maximum=max_val, value=0)
+        else:
+            self.progress.config(mode='indeterminate')
+            self.progress.start()
         
         self.current_thread = threading.Thread(
             target=self._run_experiment_thread,
@@ -211,12 +220,15 @@ class ExperimentPanel(ttk.Frame):
         def callback(iteration, cost, best_cost, solution):
             # Atualiza status e mutation rate (se disponível)
             self.main_window.root.after(0, self.update_status, iteration, cost, best_cost)
-            try:
-                mut = getattr(heuristic, 'mutation_rate', None)
-                if mut is not None:
-                    self.main_window.root.after(0, self.update_mutation_rate, mut)
-            except Exception:
-                pass
+            # no mutation-rate UI to update
+            # Atualiza barra de progresso em modo determinístico
+            if mode == 'iterations':
+                try:
+                    max_iter = int(limit)
+                except Exception:
+                    max_iter = None
+                if max_iter:
+                    self.main_window.root.after(0, self.update_progress, iteration, max_iter)
             return self.running
         
         try:
@@ -255,8 +267,7 @@ class ExperimentPanel(ttk.Frame):
         # Update status to show round and cost
         cost = results.get('best_cost', 0)
         self.status_label.config(text=f"Rodada {run_index}/{total_runs} | Custo: {cost:.2f}")
-        if mutation_rate is not None:
-            self.update_mutation_rate(mutation_rate)
+        # mutation rate UI removed
 
     def run_repetitions(self):
         """Executa o mesmo experimento várias vezes e agrega métricas."""
@@ -303,9 +314,8 @@ class ExperimentPanel(ttk.Frame):
                     results_list.append(res)
                     total_time += res.get('execution_time', 0)
                     # update GUI with each completed run (do not change running state)
-                    mut = getattr(heuristic, 'mutation_rate', None)
                     run_idx = i + 1
-                    self.main_window.root.after(0, lambda r=res, idx=run_idx, m=mut: self._on_single_run_complete(r, idx, reps, m))
+                    self.main_window.root.after(0, lambda r=res, idx=run_idx: self._on_single_run_complete(r, idx, reps))
                 except Exception as e:
                     self.main_window.root.after(0, lambda: self._on_experiment_error(str(e)))
                     self.running = False
@@ -358,6 +368,16 @@ class ExperimentPanel(ttk.Frame):
         self.status_label.config(
             text=f"Iteração {iteration} | Custo: {cost:.2f} | Melhor: {best_cost:.2f}"
         )
+
+    def update_progress(self, iteration, max_iter):
+        """Atualiza barra de progresso em modo determininado (iterações)."""
+        try:
+            val = min(max_iter, iteration + 1)
+            self.progress['value'] = val
+            if val >= max_iter:
+                self.progress.stop()
+        except Exception:
+            pass
     
     def _on_experiment_complete(self, results):
         """Callback quando experimento termina"""

@@ -31,6 +31,8 @@ class GeneticAlgorithm(Metaheuristic):
         self.num_operations = len(self.all_operations)
         self.population = []
         self.fitness = []
+        # cache for evaluated permutations: key -> fitness
+        self.eval_cache = {}
         
     def get_params_info(self):
         return {
@@ -70,24 +72,25 @@ class GeneticAlgorithm(Metaheuristic):
                 'description': 'Peso do makespan'
             }
             ,
-            'adaptive_mutation': {
+            'random_injection': {
+                'type': 'int',
+                'default': 0,
+                'min': 0,
+                'max': 100,
+                'description': 'Número de indivíduos aleatórios a inserir por geração'
+            }
+            ,
+            'memetic': {
                 'type': 'bool',
                 'default': False,
-                'description': 'Ativa taxa de mutação adaptativa baseada na diversidade'
+                'description': 'Ativa busca local (memetic) sobre filhos'
             },
-            'mutation_rate_min': {
-                'type': 'float',
-                'default': 0.01,
-                'min': 0.0,
-                'max': 0.5,
-                'description': 'Taxa de mutação mínima (quando diversidade alta)'
-            },
-            'mutation_rate_max': {
-                'type': 'float',
-                'default': 0.2,
-                'min': 0.01,
-                'max': 1.0,
-                'description': 'Taxa de mutação máxima (quando diversidade baixa)'
+            'memetic_tries': {
+                'type': 'int',
+                'default': 10,
+                'min': 1,
+                'max': 200,
+                'description': 'Número de tentativas na busca local por filho'
             }
         }
     
@@ -99,12 +102,11 @@ class GeneticAlgorithm(Metaheuristic):
         self.tournament_size = kwargs.get('tournament_size', 3)
         self.weight_makespan = kwargs.get('weight_makespan', 0.5)
         self.weight_tardiness = 1.0 - self.weight_makespan
-        # Adaptive mutation parameters
-        self.adaptive_mutation = kwargs.get('adaptive_mutation', False)
-        self.mutation_rate_min = kwargs.get('mutation_rate_min', 0.01)
-        self.mutation_rate_max = kwargs.get('mutation_rate_max', 0.2)
-        # store base for reference
-        self.base_mutation_rate = kwargs.get('mutation_rate', self.mutation_rate)
+        # random injection per generation
+        self.random_injection = kwargs.get('random_injection', 0)
+        # memetic parameters
+        self.memetic = kwargs.get('memetic', False)
+        self.memetic_tries = kwargs.get('memetic_tries', 10)
         
         self.params = {
             'population_size': self.population_size,
@@ -114,9 +116,7 @@ class GeneticAlgorithm(Metaheuristic):
             'tournament_size': self.tournament_size,
             'weight_makespan': self.weight_makespan,
             'weight_tardiness': self.weight_tardiness
-            , 'adaptive_mutation': self.adaptive_mutation,
-            'mutation_rate_min': self.mutation_rate_min,
-            'mutation_rate_max': self.mutation_rate_max
+            , 'random_injection': self.random_injection
         }
         
         if kwargs.get('initial_population'):
@@ -133,22 +133,51 @@ class GeneticAlgorithm(Metaheuristic):
     def _generate_initial_population(self):
         population = []
         for _ in range(self.population_size):
+            # Gera permutação única de 1..n (representação por posição)
+            perm = list(range(1, self.num_operations + 1))
+            random.shuffle(perm)
             solution = Solution(self.problem_obj)
-            # Gera prioridades aleatórias
-            for op in self.all_operations:
-                priority = random.randint(1, 50)
-                solution.set_priority(*op, priority)
+            for idx, op in enumerate(self.all_operations):
+                solution.set_priority(*op, perm[idx])
             population.append(solution)
         return population
     
     def _evaluate(self, individual):
+        # use cache keyed by ordered priorities tuple
+        key = tuple(individual.get_priority(*op) for op in self.all_operations)
+        if key in self.eval_cache:
+            return self.eval_cache[key]
+
         scheduler = JobShopScheduler(self.problem_obj.data)
         results = scheduler.simulate_with_user_priority(deepcopy(individual.priorities))
-        
+
         makespan = results['makespan']
         tardiness = results['tardiness']
-        
-        return self.weight_makespan * makespan + self.weight_tardiness * (tardiness + 1)
+
+        val = self.weight_makespan * makespan + self.weight_tardiness * (tardiness + 1)
+        self.eval_cache[key] = val
+        return val
+
+    def _local_search(self, individual, tries=10):
+        """Simple swap-based hill-climbing: try random swaps and keep improvement."""
+        best = individual
+        best_cost = self._evaluate(best)
+        n = self.num_operations
+        for _ in range(tries):
+            i, j = random.randrange(n), random.randrange(n)
+            if i == j:
+                continue
+            a_op = self.all_operations[i]
+            b_op = self.all_operations[j]
+            new = best.copy()
+            pa = new.get_priority(*a_op)
+            pb = new.get_priority(*b_op)
+            new.set_priority(*a_op, pb)
+            new.set_priority(*b_op, pa)
+            cost = self._evaluate(new)
+            if cost < best_cost:
+                best, best_cost = new, cost
+        return best
     
     def evaluate_solution(self, solution):
         scheduler = JobShopScheduler(self.problem_obj.data)
@@ -162,30 +191,70 @@ class GeneticAlgorithm(Metaheuristic):
     def _crossover(self, parent1, parent2):
         if random.random() > self.crossover_rate:
             return parent1.copy(), parent2.copy()
-        
+        # Converte pais para permutações (listas de prioridades)
+        p1 = [parent1.get_priority(*op) for op in self.all_operations]
+        p2 = [parent2.get_priority(*op) for op in self.all_operations]
+
+        # Aplicar PMX (Partially Mapped Crossover) para preservar permutação
+        def pmx(a, b):
+            n = len(a)
+            c = [-1] * n
+            i, j = sorted(random.sample(range(n), 2))
+            # copia segmento
+            for k in range(i, j + 1):
+                c[k] = a[k]
+
+            # mapeia os valores do outro pai
+            for k in range(i, j + 1):
+                if b[k] not in c:
+                    val = b[k]
+                    pos = k
+                    while True:
+                        mapped = a[pos]
+                        try:
+                            pos = b.index(mapped)
+                        except ValueError:
+                            break
+                        if c[pos] == -1:
+                            break
+                    c[pos] = val
+
+            # preenche restantes com valores de b
+            bi = 0
+            for idx in range(n):
+                if c[idx] == -1:
+                    while b[bi] in c:
+                        bi += 1
+                    c[idx] = b[bi]
+            return c
+
+        child_perm1 = pmx(p1, p2)
+        child_perm2 = pmx(p2, p1)
+
+        # converte permutações em Solution
         child1 = Solution(self.problem_obj)
         child2 = Solution(self.problem_obj)
-        
-        for op in self.all_operations:
-            if random.random() < 0.5:
-                child1.set_priority(*op, parent1.get_priority(*op))
-                child2.set_priority(*op, parent2.get_priority(*op))
-            else:
-                child1.set_priority(*op, parent2.get_priority(*op))
-                child2.set_priority(*op, parent1.get_priority(*op))
-        
+        for idx, op in enumerate(self.all_operations):
+            child1.set_priority(*op, child_perm1[idx])
+            child2.set_priority(*op, child_perm2[idx])
+
         return child1, child2
     
     def _mutate(self, individual):
+        # Mutação por trocas (swap) mantendo permutação 1..n
         mutated = deepcopy(individual)
-        for op in self.all_operations:
+        n = self.num_operations
+        # Para cada posição, com probabilidade mutation_rate troque com outra posição
+        for i, op in enumerate(self.all_operations):
             if random.random() < self.mutation_rate:
-                current = mutated.get_priority(*op)
-                delta = random.randint(-5, 5)
-                new_value = current + delta
-                new_value = max(1, min(50, new_value))
-                mutated.set_priority(*op, new_value)
-        
+                j = random.randrange(n)
+                # troca prioridades entre posições i e j
+                pri_i = mutated.get_priority(*op)
+                op_j = self.all_operations[j]
+                pri_j = mutated.get_priority(*op_j)
+                mutated.set_priority(*op, pri_j)
+                mutated.set_priority(*op_j, pri_i)
+
         return mutated
 
     def _compute_diversity(self):
@@ -206,15 +275,25 @@ class GeneticAlgorithm(Metaheuristic):
 
         return total_ratio / max(1, len(self.all_operations))
     
+    def _generate_random_individuals(self, k):
+        inds = []
+        fits = []
+        for _ in range(k):
+            perm = list(range(1, self.num_operations + 1))
+            random.shuffle(perm)
+            sol = Solution(self.problem_obj)
+            for idx, op in enumerate(self.all_operations):
+                sol.set_priority(*op, perm[idx])
+            f = self._evaluate(sol)
+            inds.append(sol)
+            fits.append(f)
+        return inds, fits
+    
     def step(self):
         new_population = []
         new_fitness = []
 
-        # If adaptive mutation is enabled, adjust mutation_rate based on population diversity
-        if getattr(self, 'adaptive_mutation', False):
-            div = self._compute_diversity()
-            # diversity in [0,1]; lower diversity -> higher mutation
-            self.mutation_rate = self.mutation_rate_min + (self.mutation_rate_max - self.mutation_rate_min) * (1 - div)
+        # (No adaptive mutation) — optionally inject random individuals below
         
         # Elitismo
         elite_indices = sorted(range(len(self.fitness)), key=lambda i: self.fitness[i])[:self.elite_size]
@@ -231,16 +310,29 @@ class GeneticAlgorithm(Metaheuristic):
             
             child1 = self._mutate(child1)
             child2 = self._mutate(child2)
-            
+
+            # optional memetic local search
+            if getattr(self, 'memetic', False):
+                child1 = self._local_search(child1, tries=self.memetic_tries)
+                child2 = self._local_search(child2, tries=self.memetic_tries)
+
             fitness1 = self._evaluate(child1)
             fitness2 = self._evaluate(child2)
             
             new_population.extend([child1, child2])
             new_fitness.extend([fitness1, fitness2])
         
-        self.population = new_population[:self.population_size]
-        self.fitness = new_fitness[:self.population_size]
-        
+        # Inject random individuals if configured
+        if getattr(self, 'random_injection', 0) and self.random_injection > 0:
+            inds, fits = self._generate_random_individuals(self.random_injection)
+            new_population.extend(inds)
+            new_fitness.extend(fits)
+
+        # select best individuals to maintain population size
+        idxs_sorted = sorted(range(len(new_fitness)), key=lambda i: new_fitness[i])
+        selected = idxs_sorted[:self.population_size]
+        self.population = [new_population[i] for i in selected]
+        self.fitness = [new_fitness[i] for i in selected]
+
         best_idx = min(range(len(self.fitness)), key=lambda i: self.fitness[i])
-        
         return self.population[best_idx], self.fitness[best_idx]
